@@ -7,9 +7,16 @@
  *
  * Why text/plain?
  * The phone app (hosted on GitHub Pages) sends POST requests with
- * Content-Type: text/plain;charset=utf-8 and body JSON.stringify({ action, payload }).
+ * Content-Type: text/plain;charset=utf-8 and body
+ * JSON.stringify({ action, payload, pin }).
  * Using text/plain avoids browser CORS preflight (OPTIONS), which Apps Script
  * Web Apps do not answer.
+ *
+ * Family PIN:
+ * Set Script Properties key FAMILY_PIN to the 6-digit family PIN (never
+ * hardcode it here). Every request must send a matching pin. If FAMILY_PIN
+ * is missing or empty, every request is rejected (fail closed). A wrong or
+ * missing pin returns { ok: false, error: 'wrong_pin' }.
  *
  * Security / safety notes:
  * - Only explicitly allowlisted actions can run.
@@ -17,12 +24,39 @@
  *   continue to run inside the existing v40 server functions.
  */
 
+/** Reads FAMILY_PIN from Script Properties. Empty/unset means reject all. */
+function familyPinExpected_() {
+  try {
+    var v = PropertiesService.getScriptProperties().getProperty('FAMILY_PIN');
+    return v == null ? '' : String(v);
+  } catch (e) {
+    return '';
+  }
+}
+
+/** Same-length XOR compare, then a final equality check. Fail closed on empty expected. */
+function pinMatches_(given, expected) {
+  expected = String(expected == null ? '' : expected);
+  given = String(given == null ? '' : given);
+  if (!expected) return false;
+  var len = expected.length;
+  var diff = expected.length === given.length ? 0 : 1;
+  for (var i = 0; i < len; i++) {
+    diff |= expected.charCodeAt(i) ^ given.charCodeAt(i < given.length ? i : 0);
+  }
+  return diff === 0 && given === expected;
+}
+
 function doPost(e) {
   try {
     var raw = (e && e.postData && e.postData.contents) ? String(e.postData.contents) : '{}';
     var req = JSON.parse(raw);
     if (!req || typeof req !== 'object' || Array.isArray(req)) {
       return json_({ ok: false, error: 'invalid_request' });
+    }
+
+    if (!pinMatches_(req.pin, familyPinExpected_())) {
+      return json_({ ok: false, error: 'wrong_pin' });
     }
 
     var action = String(req.action || '').trim();

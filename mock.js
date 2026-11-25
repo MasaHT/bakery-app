@@ -411,8 +411,12 @@ function mockSaveDispatchCount(data) {
   };
 }
 
-export async function runMock(action, payload) {
+export async function runMock(action, payload, pin) {
   await sleep(480);
+  // Practice mode: any 6-digit PIN is accepted, except 000000 (to try the wrong-PIN screen).
+  if (!/^\d{6}$/.test(String(pin || '')) || String(pin) === '000000') {
+    return { ok: false, error: 'wrong_pin' };
+  }
   switch (action) {
     case 'dateHasEntries': return mockDateHasEntries(payload.date, payload.shop);
     case 'saveEntryWithHandovers': return mockSaveEntryWithHandovers(payload);

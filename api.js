@@ -63,6 +63,44 @@ export function dowOf(iso) {
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
+
+const PIN_STORAGE_KEY = 'bakery.pin';
+const pinWrongListeners = new Set();
+
+export function isValidPin(pin) {
+  return /^\d{6}$/.test(String(pin == null ? '' : pin));
+}
+
+export function getPin() {
+  try {
+    return (localStorage.getItem(PIN_STORAGE_KEY) || '').trim();
+  } catch (e) {
+    return '';
+  }
+}
+
+export function setPin(pin) {
+  const clean = String(pin == null ? '' : pin).replace(/\D/g, '').slice(0, 6);
+  if (!isValidPin(clean)) return false;
+  try { localStorage.setItem(PIN_STORAGE_KEY, clean); } catch (e) {}
+  return true;
+}
+
+export function clearPin() {
+  try { localStorage.removeItem(PIN_STORAGE_KEY); } catch (e) {}
+}
+
+export function onWrongPin(fn) {
+  pinWrongListeners.add(fn);
+}
+
+function handleWrongPin() {
+  clearPin();
+  pinWrongListeners.forEach((fn) => {
+    try { fn(); } catch (e) {}
+  });
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -91,22 +129,28 @@ async function fetchWithTimeout(url, bodyText, timeoutMs) {
 
 let mockModPromise = null;
 
+function takeResult(result) {
+  if (result && result.error === 'wrong_pin') handleWrongPin();
+  return result;
+}
+
 export async function callApi(action, payload = {}, opts = {}) {
   const isWrite = !!opts.isWrite;
+  const pin = getPin();
   if (DATA_MODE === 'mock') {
     if (!mockModPromise) mockModPromise = import('./mock.js');
     const mock = await mockModPromise;
-    return mock.runMock(action, payload);
+    return takeResult(await mock.runMock(action, payload, pin));
   }
 
-  const bodyText = JSON.stringify({ action, payload });
+  const bodyText = JSON.stringify({ action, payload, pin });
   const timeoutMs = isWrite ? TIMEOUT_WRITE_MS : TIMEOUT_READ_MS;
   const maxAttempts = isWrite ? 1 : 1 + READ_RETRIES;
 
   let lastErr = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return await fetchWithTimeout(API_URL, bodyText, timeoutMs);
+      return takeResult(await fetchWithTimeout(API_URL, bodyText, timeoutMs));
     } catch (err) {
       lastErr = err;
       const isAbort = err && err.name === 'AbortError';

@@ -1,5 +1,5 @@
 import { DATA_MODE, WHO_QUICK_NAMES } from './config.js';
-import { malawiToday, dmy, addDays, dowOf } from './api.js';
+import { malawiToday, dmy, addDays, dowOf, getPin, setPin, isValidPin, onWrongPin, callApi } from './api.js';
 
 const WHO_STORAGE_KEY = 'bakery.who';
 const TAB_NAMES = ['wholesale', 'expenses', 'production', 'dispatch'];
@@ -74,6 +74,7 @@ export function openWhoModal(allowCancel = true) {
     btn.addEventListener('click', () => {
       setWho(btn.getAttribute('data-who-pick'));
       modal.hidden = true;
+      afterIdentityChange();
     });
   });
 
@@ -101,13 +102,91 @@ function initWhoModal() {
     }
     setWho(val);
     modal.hidden = true;
+    afterIdentityChange();
   });
 
   updateWhoBar();
+}
+
+export function openPinModal(opts = {}) {
+  const modal = document.getElementById('pin-modal');
+  const input = document.getElementById('pin-input');
+  const errEl = document.getElementById('pin-err');
+  const cancelBtn = document.getElementById('pin-cancel-btn');
+  const current = getPin();
+  const allowCancel = !!opts.allowCancel && isValidPin(current);
+  const message = opts.message || '';
+
+  errEl.textContent = message;
+  errEl.classList.toggle('show', !!message);
+  input.value = '';
+  cancelBtn.hidden = !allowCancel;
+  modal.hidden = false;
+  setTimeout(() => { try { input.focus(); } catch (e) {} }, 50);
+}
+
+function initPinModal() {
+  const modal = document.getElementById('pin-modal');
+  const form = document.getElementById('pin-form');
+  const input = document.getElementById('pin-input');
+  const errEl = document.getElementById('pin-err');
+  const cancelBtn = document.getElementById('pin-cancel-btn');
+  const changeBtn = document.getElementById('pin-change-btn');
+
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 6);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = input.value.replace(/\D/g, '');
+    if (!isValidPin(val)) {
+      errEl.textContent = 'Enter the 6-digit Family PIN (numbers only).';
+      errEl.classList.add('show');
+      input.focus();
+      return;
+    }
+    setPin(val);
+    modal.hidden = true;
+    afterIdentityChange();
+  });
+
+  cancelBtn.addEventListener('click', () => { modal.hidden = true; });
+  changeBtn.addEventListener('click', () => openPinModal({ allowCancel: true }));
+  onWrongPin(() => {
+    openPinModal({
+      allowCancel: false,
+      message: 'That PIN is not right. Ask Masa for the Family PIN and try again.'
+    });
+  });
+}
+
+function appReady() {
+  return !!getWho() && isValidPin(getPin());
+}
+
+function afterIdentityChange() {
   if (!getWho()) {
     openWhoModal(false);
+    return;
   }
+  if (!isValidPin(getPin())) {
+    openPinModal({ allowCancel: false });
+    return;
+  }
+  maybeStartApp();
 }
+
+async function maybeStartApp() {
+  if (!appReady()) return;
+  if (!loadedScreens.wholesale) {
+    await openTab(activeTab || 'wholesale');
+    return;
+  }
+  // Screens already open (e.g. after Change PIN): a quick read confirms the PIN.
+  try { await callApi('dateHasEntries', { date: malawiToday(), shop: 'Town' }); } catch (e) {}
+}
+
 
 // Shared DD/MM/YYYY date picker + quick backdate chips (Today, Yesterday, 2 days ago)
 export function setupDateControl(inputEl, chipsEl, opts = {}) {
@@ -190,6 +269,10 @@ export function renderDayWarnings(date, shop) {
 
 async function openTab(name) {
   if (!TAB_NAMES.includes(name)) return;
+  if (!appReady()) {
+    afterIdentityChange();
+    return;
+  }
   activeTab = name;
 
   TAB_NAMES.forEach((t) => {
@@ -268,6 +351,7 @@ if (DATA_MODE === 'mock') {
 }
 initOfflineBanner();
 initWhoModal();
+initPinModal();
 initTabs();
 registerSW();
-openTab('wholesale');
+afterIdentityChange();

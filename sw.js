@@ -1,6 +1,6 @@
 // Offline app-shell service worker for Cake Palace Daily Entry.
 // Caches UI shell & lazy screen modules; never caches live API saves/reads.
-const CACHE_NAME = 'cake-palace-shell-v1';
+const CACHE_NAME = 'cake-palace-shell-v2';
 const SHELL_ASSETS = [
   './',
   './index.html',

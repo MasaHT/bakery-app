@@ -72,18 +72,31 @@ body {
   padding: 8px 12px;
   font-size: 0.9rem;
 }
+.who-actions { display: flex; gap: 6px; flex: none; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .who-change-btn {
   min-height: 34px;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--surface-alt);
   color: var(--text);
   font: inherit;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
 }
+.pin-input {
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.55rem;
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  padding-left: 0.4em;
+}
+#pin-form .btn-primary { margin-top: 10px; }
 
 .offline-banner {
   margin: 8px 0 0;

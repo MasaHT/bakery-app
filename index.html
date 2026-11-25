@@ -23,7 +23,10 @@
     </div>
     <div class="who-bar">
       <span class="who-label">Entering as: <strong id="who-current">Not picked</strong></span>
-      <button type="button" id="who-change-btn" class="who-change-btn">Change</button>
+      <div class="who-actions">
+        <button type="button" id="who-change-btn" class="who-change-btn">Change</button>
+        <button type="button" id="pin-change-btn" class="who-change-btn">Change PIN</button>
+      </div>
     </div>
     <p id="offline-banner" class="offline-banner" hidden>You are offline. You can open the app, but saving needs internet.</p>
   </header>
@@ -56,6 +59,20 @@
         <p id="who-custom-err" class="hint" role="alert"></p>
       </form>
       <button type="button" id="who-cancel-btn" class="link-btn modal-cancel" hidden>Keep current name</button>
+    </div>
+  </div>
+
+  <div id="pin-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title" hidden>
+    <div class="modal-card">
+      <h2 id="pin-modal-title">Family PIN</h2>
+      <p class="note">Family PIN, ask Masa. This phone remembers it, so you only enter it once.</p>
+      <form id="pin-form">
+        <label class="field-label" for="pin-input">6-digit PIN</label>
+        <input id="pin-input" class="pin-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="••••••" />
+        <button type="submit" class="btn-primary" id="pin-save-btn">Save PIN</button>
+        <p id="pin-err" class="hint" role="alert"></p>
+      </form>
+      <button type="button" id="pin-cancel-btn" class="link-btn modal-cancel" hidden>Keep current PIN</button>
     </div>
   </div>
 
