@@ -1,2 +1,2 @@
 # bakery-app
-Cake Palace bakery phone entry app
+Jumlop Bakery phone entry app
