@@ -1,6 +1,6 @@
-# Cake Palace Bakery Phone App
+# Jumlop Bakery Phone App
 
-A simple, fast phone app for the Cake Palace team to record daily bakery work in Malawi time (`CAT`).
+A simple, fast phone app for the Jumlop Bakery team to record daily bakery work in Malawi time (`CAT`).
 
 ## What it does
 - **Wholesale Entry**: Morning delivery, afternoon delivery, stock left (with **Out** for sold out), cash, and handovers for **Town**, **Home**, **Wakawaka**, and **St. John's**.

@@ -1,7 +1,7 @@
 /**
  * PhoneReceiver.gs — NOT DEPLOYED (Step 1 draft).
  *
- * When Masa approves going live, add this file to the Cake Palace v40
+ * When Masa approves going live, add this file to the Jumlop Bakery v40
  * Apps Script project and remove/replace the older doPost(e) in Code.gs
  * so only one doPost(e) exists in the project.
  *

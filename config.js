@@ -1,4 +1,4 @@
-// Cake Palace PWA configuration (mirrors v40 live web app).
+// Jumlop Bakery PWA configuration (mirrors v40 live web app).
 // Leave API_URL empty for Practice / Mock mode (step 1).
 // When Masa approves going live, paste the Apps Script Web App /exec URL here.
 export const API_URL = '';

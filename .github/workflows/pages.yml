@@ -1,4 +1,4 @@
-name: Deploy Cake Palace PWA to GitHub Pages
+name: Deploy Jumlop Bakery PWA to GitHub Pages
 
 on:
   push:

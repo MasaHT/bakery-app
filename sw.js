@@ -1,6 +1,6 @@
-// Offline app-shell service worker for Cake Palace Daily Entry.
+// Offline app-shell service worker for Jumlop Bakery Daily Entry.
 // Caches UI shell & lazy screen modules; never caches live API saves/reads.
-const CACHE_NAME = 'cake-palace-shell-v2';
+const CACHE_NAME = 'jumlop-bakery-shell-v3';
 const SHELL_ASSETS = [
   './',
   './index.html',

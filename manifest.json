@@ -1,7 +1,7 @@
 {
-  "name": "Cake Palace Daily Entry",
-  "short_name": "Cake Palace",
-  "description": "Cake Palace daily bakery entry for wholesale deliveries, expenses, production, and dispatch room counts.",
+  "name": "Jumlop Bakery",
+  "short_name": "Jumlop",
+  "description": "Jumlop Bakery daily bakery entry for wholesale deliveries, expenses, production, and dispatch room counts.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
