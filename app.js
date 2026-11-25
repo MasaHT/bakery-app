@@ -179,12 +179,24 @@ function afterIdentityChange() {
 
 async function maybeStartApp() {
   if (!appReady()) return;
-  if (!loadedScreens.wholesale) {
+  if (!loadedScreens[activeTab]) {
     await openTab(activeTab || 'wholesale');
     return;
   }
-  // Screens already open (e.g. after Change PIN): a quick read confirms the PIN.
-  try { await callApi('dateHasEntries', { date: malawiToday(), shop: 'Town' }); } catch (e) {}
+  if (activeTab === 'wholesale') {
+    const btn = document.getElementById('ws-refresh');
+    if (btn) { btn.click(); return; }
+  }
+  if (activeTab === 'production' && document.getElementById('pr-content')?.hidden) {
+    const btn = document.getElementById('pr-refresh');
+    if (btn) { btn.click(); return; }
+  }
+  if (activeTab === 'dispatch' && document.getElementById('dp-content')?.hidden) {
+    const btn = document.getElementById('dp-refresh');
+    if (btn) { btn.click(); return; }
+  }
+  // Screens already open (e.g. after Change PIN): a quick ping confirms the PIN.
+  try { await callApi('ping', {}); } catch (e) {}
 }
 
 
@@ -348,6 +360,8 @@ const modePill = document.getElementById('mode-pill');
 if (DATA_MODE === 'mock') {
   modePill.hidden = false;
   modePill.textContent = 'Practice mode';
+} else {
+  modePill.hidden = true;
 }
 initOfflineBanner();
 initWhoModal();

@@ -418,6 +418,7 @@ export async function runMock(action, payload, pin) {
     return { ok: false, error: 'wrong_pin' };
   }
   switch (action) {
+    case 'ping': return { ok: true, malawiToday: malawiToday() };
     case 'dateHasEntries': return mockDateHasEntries(payload.date, payload.shop);
     case 'saveEntryWithHandovers': return mockSaveEntryWithHandovers(payload);
     case 'saveStJohnEntry': return mockSaveStJohnEntry(payload);

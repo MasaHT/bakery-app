@@ -1,9 +1,17 @@
-// Jumlop Bakery PWA configuration (mirrors v40 live web app).
-// Leave API_URL empty for Practice / Mock mode (step 1).
-// When Masa approves going live, paste the Apps Script Web App /exec URL here.
-export const API_URL = '';
+// Jumlop Bakery PWA configuration (mirrors v40/v41 live web app).
+// Uses the live Apps Script Web App by default; open with ?mock=1 for Practice mode.
+export const API_URL = 'https://script.google.com/macros/s/AKfycbxBJzt8s8W6DokJEC-ccTojIVn_-9TR3yyun_HYnWajXb32vDuLSCmS9rh8l77Q5ZvGXQ/exec';
 
-export const DATA_MODE = API_URL ? 'live' : 'mock';
+const isMockOverride = (() => {
+  try {
+    return typeof location !== 'undefined' &&
+      new URLSearchParams(location.search || '').get('mock') === '1';
+  } catch (e) {
+    return false;
+  }
+})();
+
+export const DATA_MODE = (isMockOverride || !API_URL) ? 'mock' : 'live';
 export const TIMEOUT_READ_MS = 15000;
 export const TIMEOUT_WRITE_MS = 25000;
 export const READ_RETRIES = 2;
