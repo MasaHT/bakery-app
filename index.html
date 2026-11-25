@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2b1b12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Jumlop Bakery Daily Entry</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-row">
+      <img src="./icons/icon-192.png" alt="" class="brand-icon" width="36" height="36" />
+      <div class="brand-text">
+        <h1>Jumlop Bakery</h1>
+        <p class="sub">Malawi time (CAT) · Daily entry</p>
+      </div>
+      <span id="mode-pill" class="mode-pill" hidden>Practice mode</span>
+    </div>
+    <div class="who-bar">
+      <span class="who-label">Entering as: <strong id="who-current">Not picked</strong></span>
+      <div class="who-actions">
+        <button type="button" id="who-change-btn" class="who-change-btn">Change</button>
+        <button type="button" id="pin-change-btn" class="who-change-btn">Change PIN</button>
+      </div>
+    </div>
+    <p id="offline-banner" class="offline-banner" hidden>You are offline. You can open the app, but saving needs internet.</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Entry screens">
+    <button type="button" id="tab-wholesale" role="tab" aria-selected="true" aria-controls="panel-wholesale" data-tab="wholesale">Wholesale<br>Entry</button>
+    <button type="button" id="tab-expenses" role="tab" aria-selected="false" aria-controls="panel-expenses" data-tab="expenses" tabindex="-1">Expenses</button>
+    <button type="button" id="tab-production" role="tab" aria-selected="false" aria-controls="panel-production" data-tab="production" tabindex="-1">Production</button>
+    <button type="button" id="tab-dispatch" role="tab" aria-selected="false" aria-controls="panel-dispatch" data-tab="dispatch" tabindex="-1">Dispatch<br>room</button>
+  </nav>
+
+  <main>
+    <div id="panel-wholesale" role="tabpanel" aria-labelledby="tab-wholesale"></div>
+    <div id="panel-expenses" role="tabpanel" aria-labelledby="tab-expenses" hidden></div>
+    <div id="panel-production" role="tabpanel" aria-labelledby="tab-production" hidden></div>
+    <div id="panel-dispatch" role="tabpanel" aria-labelledby="tab-dispatch" hidden></div>
+  </main>
+
+  <div id="who-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="who-modal-title" hidden>
+    <div class="modal-card">
+      <h2 id="who-modal-title">Who's entering?</h2>
+      <p class="note">Your name is remembered on this phone so you don't have to type it every time.</p>
+      <div id="who-quick-grid" class="who-grid"></div>
+      <form id="who-custom-form" class="who-custom">
+        <label class="field-label" for="who-custom-input">Or type another name</label>
+        <div class="who-custom-row">
+          <input id="who-custom-input" type="text" maxlength="40" autocomplete="name" placeholder="Type your name…" />
+          <button type="submit" class="btn-primary">Use name</button>
+        </div>
+        <p id="who-custom-err" class="hint" role="alert"></p>
+      </form>
+      <button type="button" id="who-cancel-btn" class="link-btn modal-cancel" hidden>Keep current name</button>
+    </div>
+  </div>
+
+  <div id="pin-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title" hidden>
+    <div class="modal-card">
+      <h2 id="pin-modal-title">Family PIN</h2>
+      <p class="note">Family PIN, ask Masa. This phone remembers it, so you only enter it once.</p>
+      <form id="pin-form">
+        <label class="field-label" for="pin-input">6-digit PIN</label>
+        <input id="pin-input" class="pin-input" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="••••••" />
+        <button type="submit" class="btn-primary" id="pin-save-btn">Save PIN</button>
+        <p id="pin-err" class="hint" role="alert"></p>
+      </form>
+      <button type="button" id="pin-cancel-btn" class="link-btn modal-cancel" hidden>Keep current PIN</button>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
