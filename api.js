@@ -94,6 +94,27 @@ export function onWrongPin(fn) {
   pinWrongListeners.add(fn);
 }
 
+const networkListeners = new Set();
+
+export function onNetworkStatus(fn) {
+  networkListeners.add(fn);
+}
+
+function reportNetwork(ok) {
+  networkListeners.forEach((fn) => {
+    try { fn(ok); } catch (e) {}
+  });
+}
+
+function isNetworkError(err) {
+  if (!err) return false;
+  if (err.name === 'AbortError') return false;
+  const msg = String(err.message || err);
+  if (/server returned|could not read server reply/i.test(msg)) return false;
+  if (err.name === 'TypeError') return true;
+  return /failed to fetch|networkerror|network error|load failed/i.test(msg);
+}
+
 function handleWrongPin() {
   clearPin();
   pinWrongListeners.forEach((fn) => {
@@ -150,9 +171,12 @@ export async function callApi(action, payload = {}, opts = {}) {
   let lastErr = null;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return takeResult(await fetchWithTimeout(API_URL, bodyText, timeoutMs));
+      const result = takeResult(await fetchWithTimeout(API_URL, bodyText, timeoutMs));
+      reportNetwork(true);
+      return result;
     } catch (err) {
       lastErr = err;
+      if (isNetworkError(err)) reportNetwork(false);
       const isAbort = err && err.name === 'AbortError';
       if (attempt < maxAttempts) {
         await sleep(attempt === 1 ? 500 : 1200);

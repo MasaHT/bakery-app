@@ -11,7 +11,7 @@ import {
   HANDOVER_LABELS
 } from '../config.js';
 import { callApi, malawiToday, dmy, dmyText } from '../api.js';
-import { esc, kw, setupDateControl, renderDayWarnings, getWho } from '../app.js';
+import { esc, kw, setupDateControl, renderDayWarnings, getWho, notifySaved } from '../app.js';
 
 function displayName(n) {
   return DISPLAY_NAMES[n] || n;
@@ -635,6 +635,7 @@ export async function mount(panel) {
   el('refresh').addEventListener('click', checkDateRecorded);
   el('date').addEventListener('change', checkDateRecorded);
   el('shop').addEventListener('change', () => {
+    try { localStorage.setItem('bakery.shop', el('shop').value); } catch (e) {}
     applyShopState();
     checkDateRecorded();
   });
@@ -792,6 +793,8 @@ export async function mount(panel) {
         + (nHo ? ` · ${nHo} handover(s) logged` : '')
         + (nDup ? ` · ${nDup} handover(s) already logged` : '');
       saved.classList.add('show');
+      btn.textContent = 'Save';
+      notifySaved(saved.textContent);
 
       if (entrySaved && data.wholesale) {
         const wh = data.wholesale;
@@ -829,6 +832,13 @@ export async function mount(panel) {
       btn.textContent = 'Save';
     }
   });
+
+  try {
+    const savedShop = localStorage.getItem('bakery.shop');
+    if (savedShop && SHOPS.some((s) => s.value === savedShop)) {
+      el('shop').value = savedShop;
+    }
+  } catch (e) {}
 
   renderInitialRows();
   applyShopState();

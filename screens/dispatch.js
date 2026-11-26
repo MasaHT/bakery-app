@@ -6,7 +6,7 @@ import {
   DISPLAY_NAMES
 } from '../config.js';
 import { callApi, malawiToday, dmy, dmyText } from '../api.js';
-import { esc, num, setupDateControl, renderDayWarnings, getWho, onWhoChange } from '../app.js';
+import { esc, num, setupDateControl, renderDayWarnings, getWho, onWhoChange, notifySaved } from '../app.js';
 
 function displayName(n) {
   return DISPLAY_NAMES[n] || n;
@@ -299,6 +299,7 @@ export async function mount(panel) {
       render();
       el('save-msg').textContent = `${res.type === 'correction' ? 'Correction saved' : 'Saved'} for ${dmy(res.date)} by ${res.name}.`;
       el('save-msg').classList.add('show');
+      notifySaved(el('save-msg').textContent);
       el('status').textContent = `${dmy(res.date)} · counted by ${res.name}`;
     } catch (err) {
       el('save-err').textContent = err?.message || 'Could not save count — try again.';

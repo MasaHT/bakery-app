@@ -1,6 +1,6 @@
 // Offline app-shell service worker for Jumlop Bakery Daily Entry.
 // Caches UI shell & lazy screen modules; never caches live API saves/reads.
-const CACHE_NAME = 'jumlop-bakery-shell-v5';
+const CACHE_NAME = 'jumlop-bakery-shell-v6';
 const SHELL_ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,13 @@ const SHELL_ASSETS = [
   './app.js',
   './manifest.json',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/icon-192-maskable.png',
+  './icons/icon-512-maskable.png',
+  './screens/wholesale.js',
+  './screens/expenses.js',
+  './screens/production.js',
+  './screens/dispatch.js'
 ];
 
 self.addEventListener('install', (event) => {

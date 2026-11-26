@@ -1,0 +1,89 @@
+Jumlop Bakery phone app — short guide
+=====================================
+
+The official app is:
+
+  https://masaht.github.io/bakery-app/
+
+Open that exact link in Chrome. Do not add ?mock=1 at the end.
+If you see an orange "Practice mode" badge at the top, you are on the
+wrong link. Close that page and open the official link above.
+
+1. Put it on your Home screen (like a normal phone app)
+-------------------------------------------------------
+On Android, open the official link in Chrome.
+- If you see a bar that says "Add Jumlop to your Home screen so it
+  opens like a phone app", tap "Add to Home screen".
+- If you do not see that bar, tap Chrome's menu (three dots) and tap
+  "Add to Home screen" or "Install app".
+- You can tap "Not now" if you want to do this later.
+
+After that, open Jumlop from the icon on your Home screen.
+
+2. Name and Family PIN (only once on each phone)
+------------------------------------------------
+The app first asks "Who's entering?" Tap your name (Mummy, Papa,
+Pascal, Lovemore, Masa, Godfrey), or type another name and tap
+"Use name".
+
+It then asks for the "Family PIN". This is a 6-digit number. Ask Masa
+for it. Type it and tap "Save PIN".
+
+The phone remembers your name and the PIN, so you should not have to
+enter them again.
+
+3. Enter the day's numbers
+--------------------------
+At the top you will see "Entering as:" and your name.
+
+Pick a tab:
+- Wholesale Entry  (deliveries, stock left, cash, handovers)
+- Expenses
+- Production
+- Dispatch room
+
+Check the date at the top ("Date (Malawi)"). You can tap Today,
+Yesterday, or 2 days ago.
+
+On Wholesale Entry, also check the Shop name (Town, Home, Wakawaka,
+or St. John's). The app remembers the last shop used on that phone,
+so always look before you type.
+
+Type the numbers, then tap the dark button at the bottom:
+- "Save" on Wholesale Entry
+- "Save all expenses" on Expenses
+- "Save production" on Production
+- "Save count" on Dispatch room
+
+If it worked, a green message appears, for example
+"Saved 25/11/2026 (Home)". The phone may also give a short buzz.
+
+4. Switching names on a shared phone
+------------------------------------
+If someone else needs to enter on the same phone, tap "Change" next
+to "Entering as:". Pick the new name. That person's entries will be
+saved under the new name.
+
+5. The "Enter PIN" button
+-------------------------
+"Enter PIN" does not change the family's real PIN. It only lets you
+type the PIN again on this phone, for example if Masa has given you
+a new Family PIN, or if the last try was typed wrong.
+
+If a PIN is already saved, you can tap "Keep current PIN" to cancel.
+
+6. If something goes wrong
+--------------------------
+If it says "That PIN is not right. Ask Masa for the Family PIN and
+try again.": ask Masa, then type the 6-digit PIN again and tap
+"Save PIN".
+
+If you see "No internet — numbers can't load or save right now":
+the app can still be opened, but it cannot load or save numbers
+until the phone is back online. Check the signal, then try again
+and look for the green saved message.
+
+If the page looks old after an update: close the app completely,
+open it again from the Home screen icon, and pull down only after
+you have finished typing (so you do not lose numbers you have not
+saved yet).

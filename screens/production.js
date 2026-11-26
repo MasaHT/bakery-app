@@ -6,7 +6,7 @@ import {
   DISPLAY_NAMES
 } from '../config.js';
 import { callApi, malawiToday, dmy, dmyText } from '../api.js';
-import { esc, kw, num, setupDateControl, renderDayWarnings } from '../app.js';
+import { esc, kw, num, setupDateControl, renderDayWarnings, notifySaved } from '../app.js';
 
 function displayName(n) {
   return DISPLAY_NAMES[n] || n;
@@ -332,6 +332,7 @@ export async function mount(panel) {
       await loadProduction(true);
       el('save-msg').textContent = msg;
       el('save-msg').classList.add('show');
+      notifySaved(msg);
     } catch (err) {
       el('save-err').textContent = err?.message || 'Could not save production — try again.';
       el('save-err').classList.add('show');

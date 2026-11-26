@@ -6,7 +6,7 @@ import {
   EXPENSE_EDIT_DAYS_BACK
 } from '../config.js';
 import { callApi, malawiToday, dmy, dmyText, daySerial } from '../api.js';
-import { esc, kw, setupDateControl, renderDayWarnings, getWho, onWhoChange } from '../app.js';
+import { esc, kw, setupDateControl, renderDayWarnings, getWho, onWhoChange, notifySaved } from '../app.js';
 
 const NAME_RE = /^[A-Za-z0-9][A-Za-z0-9 .,'&()\/-]*$/;
 
@@ -334,6 +334,7 @@ export async function mount(panel) {
       const shopTxt = Object.keys(byShop).map((k) => `${k} ${byShop[k]}`).join(', ');
       status.textContent = `Saved ${data.rows} expense row(s) for ${dmy(el('date').value)}${shopTxt ? ` (${shopTxt})` : ''}.`;
       status.style.display = 'block';
+      notifySaved(status.textContent);
       resetRows();
     } catch (err) {
       errEl.textContent = err?.message || 'Could not save expenses — try again.';
@@ -431,6 +432,7 @@ export async function mount(panel) {
       setEditMode(false);
       el('status').textContent = `Saved ${res.changes} change(s) for ${dmy(payload.date)}.`;
       el('status').style.display = 'block';
+      notifySaved(el('status').textContent);
     } catch (err) {
       st.textContent = err?.message || 'Could not save changes — try again.';
       st.classList.add('show');

@@ -1,11 +1,21 @@
 import { DATA_MODE, WHO_QUICK_NAMES } from './config.js';
-import { malawiToday, dmy, addDays, dowOf, getPin, setPin, isValidPin, onWrongPin, callApi } from './api.js';
+import { malawiToday, dmy, addDays, dowOf, getPin, setPin, isValidPin, onWrongPin, onNetworkStatus, callApi } from './api.js';
 
 const WHO_STORAGE_KEY = 'bakery.who';
+const TAB_STORAGE_KEY = 'bakery.tab';
 const TAB_NAMES = ['wholesale', 'expenses', 'production', 'dispatch'];
 const loadedScreens = {};
 const whoListeners = new Set();
-let activeTab = 'wholesale';
+
+function getSavedTab() {
+  try {
+    const t = localStorage.getItem(TAB_STORAGE_KEY);
+    if (TAB_NAMES.includes(t)) return t;
+  } catch (e) {}
+  return 'wholesale';
+}
+
+let activeTab = getSavedTab();
 
 export function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
@@ -44,6 +54,21 @@ export function setWho(name) {
 
 export function onWhoChange(fn) {
   whoListeners.add(fn);
+}
+
+let toastTimer = null;
+export function notifySaved(message) {
+  const text = String(message || 'Saved');
+  const el = document.getElementById('save-toast');
+  if (el) {
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+  try {
+    if (navigator.vibrate) navigator.vibrate(40);
+  } catch (e) {}
 }
 
 function updateWhoBar() {
@@ -286,6 +311,7 @@ async function openTab(name) {
     return;
   }
   activeTab = name;
+  try { localStorage.setItem(TAB_STORAGE_KEY, name); } catch (e) {}
 
   TAB_NAMES.forEach((t) => {
     const selected = t === name;
@@ -341,12 +367,116 @@ function initTabs() {
   });
 }
 
+let fetchLooksOffline = false;
+
+function updateOfflineBanner() {
+  const el = document.getElementById('offline-banner');
+  if (!el) return;
+  const offline = navigator.onLine === false || fetchLooksOffline;
+  el.hidden = !offline;
+}
+
 function initOfflineBanner() {
   const el = document.getElementById('offline-banner');
-  const sync = () => { el.hidden = navigator.onLine !== false; };
-  window.addEventListener('online', sync);
-  window.addEventListener('offline', sync);
-  sync();
+  if (el) el.textContent = "No internet — numbers can't load or save right now";
+  window.addEventListener('online', () => {
+    fetchLooksOffline = false;
+    updateOfflineBanner();
+  });
+  window.addEventListener('offline', () => {
+    updateOfflineBanner();
+  });
+  onNetworkStatus((ok) => {
+    fetchLooksOffline = !ok;
+    updateOfflineBanner();
+  });
+  updateOfflineBanner();
+}
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.matchMedia('(display-mode: fullscreen)').matches
+    || window.navigator.standalone === true;
+}
+
+function initInstallPrompt() {
+  const bar = document.getElementById('install-bar');
+  const btn = document.getElementById('install-btn');
+  const dismiss = document.getElementById('install-dismiss');
+  if (!bar || !btn || !dismiss) return;
+  if (isStandalone()) {
+    bar.hidden = true;
+    return;
+  }
+
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('bakery.installDismissed') === '1'; } catch (e) {}
+  let deferred = null;
+
+  const show = () => {
+    if (!deferred || dismissed || isStandalone()) return;
+    bar.hidden = false;
+  };
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferred = e;
+    show();
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferred = null;
+    bar.hidden = true;
+  });
+
+  btn.addEventListener('click', async () => {
+    if (!deferred) return;
+    try { await deferred.prompt(); } catch (e) {}
+    deferred = null;
+    bar.hidden = true;
+  });
+
+  dismiss.addEventListener('click', () => {
+    dismissed = true;
+    bar.hidden = true;
+    try { localStorage.setItem('bakery.installDismissed', '1'); } catch (e) {}
+  });
+}
+
+function visibleFields() {
+  return [...document.querySelectorAll(
+    'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([disabled]), select:not([disabled]), textarea:not([disabled])'
+  )].filter((f) => !f.closest('[hidden]') && f.offsetParent !== null);
+}
+
+function initFieldAdvance() {
+  document.addEventListener('focusin', (e) => {
+    const el = e.target;
+    if (!el || !el.matches) return;
+    if (!el.matches('input[type="number"], input[inputmode="numeric"], input[inputmode="decimal"]')) return;
+    const fields = visibleFields();
+    const i = fields.indexOf(el);
+    el.setAttribute('enterkeyhint', (i >= 0 && i < fields.length - 1) ? 'next' : 'done');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const el = e.target;
+    if (!el || !el.matches) return;
+    if (el.id === 'pin-input' || el.id === 'who-custom-input') return;
+    if (!el.matches('input[type="number"], input[type="text"], input[inputmode="numeric"], input[inputmode="decimal"]')) return;
+    if (el.tagName === 'TEXTAREA') return;
+    e.preventDefault();
+    const fields = visibleFields();
+    const i = fields.indexOf(el);
+    if (i >= 0 && i < fields.length - 1) {
+      fields[i + 1].focus();
+      return;
+    }
+    const form = el.closest('form');
+    const save = form && form.querySelector('button.save, button[type="submit"]');
+    if (save && !save.disabled) save.focus();
+  });
 }
 
 function registerSW() {
@@ -367,5 +497,7 @@ initOfflineBanner();
 initWhoModal();
 initPinModal();
 initTabs();
+initInstallPrompt();
+initFieldAdvance();
 registerSW();
 afterIdentityChange();
