@@ -120,7 +120,7 @@ button, a, input, select, textarea, label, .sold {
 /* Tabs */
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
   margin-bottom: 14px;
 }
@@ -679,3 +679,43 @@ button.save:disabled, .btn-primary:disabled { opacity: 0.55; cursor: wait; }
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* Daily report (v44) — short report first */
+.tabs button { font-size: 0.74rem; padding: 4px 2px; letter-spacing: -0.01em; white-space: nowrap; }
+.rp-status { font-size: 0.84rem; color: var(--muted); margin: 0 0 10px; }
+.rp-status.offline { background: var(--amber-bg); color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber-border) 60%, transparent); border-radius: 8px; padding: 8px 10px; font-weight: 600; }
+.rp-status.warn { color: var(--red); font-weight: 600; }
+.rp-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+.rp-loading p { margin: 0; color: var(--muted); }
+.rp-hero-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rp-hero-label { margin: 0; font-size: 0.9rem; font-weight: 650; color: var(--muted); }
+.rp-day { font-size: 0.85rem; color: var(--muted); }
+.rp-hero { margin: 2px 0 8px; font-size: 2.1rem; font-weight: 800; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.rp-hero.neg { color: var(--red); }
+.rp-none { margin: 6px 0 0; font-weight: 600; }
+.rp-warn { margin: 0 0 8px; padding: 7px 10px; border-radius: 8px; background: var(--red-bg); color: var(--red); border: 1px solid color-mix(in srgb, var(--red-border) 45%, transparent); font-size: 0.88rem; font-weight: 650; }
+.rp-boxes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0 0 8px; }
+.rp-boxes > div { background: var(--surface-alt); border-radius: 8px; padding: 6px 8px; min-width: 0; }
+.rp-boxes > div.warn { background: var(--amber-bg); color: var(--amber); }
+.rp-boxes small { display: block; font-size: 0.76rem; font-weight: 650; color: inherit; opacity: 0.8; }
+.rp-boxes strong { display: block; font-size: 0.98rem; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rp-small { margin: 0 0 6px; font-size: 0.8rem; color: var(--muted); }
+.rp-shops-t { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 4px; }
+.rp-shops-t th { text-align: left; font-size: 0.74rem; color: var(--muted); font-weight: 650; padding: 4px 4px 4px 0; border-bottom: 1px solid var(--border); }
+.rp-shops-t td { padding: 7px 4px 7px 0; border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent); font-variant-numeric: tabular-nums; vertical-align: middle; }
+.rp-shops-t td:first-child { font-weight: 650; }
+.rp-uncounted, .rp-dimtxt { color: var(--muted); font-size: 0.82rem; }
+.rp-flag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+.rp-flag.red { background: var(--red-bg); color: var(--red); border: 1px solid color-mix(in srgb, var(--red-border) 50%, transparent); }
+.rp-flag.amber { background: var(--amber-bg); color: var(--amber); }
+.rp-flag.ok { background: var(--green-bg); color: var(--green); }
+.rp-flag.grey { background: var(--surface-alt); color: var(--muted); }
+.rp-attn-h { margin: 0 0 6px; }
+.rp-attn { list-style: none; margin: 0; padding: 0; }
+.rp-attn li { position: relative; padding: 5px 0 5px 16px; font-size: 0.9rem; }
+.rp-attn li::before { content: ""; position: absolute; left: 2px; top: 0.75em; width: 8px; height: 8px; border-radius: 50%; background: var(--amber-border); }
+.rp-attn li.red::before { background: var(--red-border); }
+.rp-more-note, .rp-caught { margin: 6px 0 0; font-size: 0.84rem; color: var(--muted); }
+.rp-more-btn { width: 100%; min-height: 48px; margin: 0 0 12px; border-radius: 10px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); font: inherit; font-weight: 700; cursor: pointer; }
+.rpf-bar { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+.rpf { color: var(--text); }

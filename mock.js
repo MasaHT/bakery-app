@@ -411,6 +411,22 @@ function mockSaveDispatchCount(data) {
   };
 }
 
+// Daily report practice: example numbers (built by the real v44 report code), loaded only when the Report tab asks.
+// Today shows the example with flags (check stock, no expenses); other days show a clean example.
+async function mockReadReport(date, kind) {
+  const { MOCK_REPORTS } = await import('./mock-report.js');
+  const key = date === malawiToday() ? '2026-11-25' : '2026-11-24';
+  const r = JSON.parse(JSON.stringify(MOCK_REPORTS[key][kind]));
+  const [y, m, d] = String(date).split('-').map(Number);
+  r.date = date;
+  r.dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  r.sunday = r.dow === 0;
+  r.cached = false;
+  r.generatedAt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Blantyre', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()).replace(',', '') + ' Malawi';
+  r.practice = true;
+  return r;
+}
+
 export async function runMock(action, payload, pin) {
   await sleep(480);
   // Practice mode: any 6-digit PIN is accepted, except 000000 (to try the wrong-PIN screen).
@@ -429,6 +445,8 @@ export async function runMock(action, payload, pin) {
     case 'saveProduction': return mockSaveProduction(payload);
     case 'readDispatch': return mockReadDispatch(payload.date);
     case 'saveDispatchCount': return mockSaveDispatchCount(payload);
+    case 'readReportSummary': return mockReadReport(payload.date, 'summary');
+    case 'readReportFull': return mockReadReport(payload.date, 'full');
     default: return { ok: false, error: `Unknown mock action: ${action}` };
   }
 }

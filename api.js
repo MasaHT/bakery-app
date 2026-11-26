@@ -65,6 +65,13 @@ export function dowOf(iso) {
 
 
 const PIN_STORAGE_KEY = 'bakery.pin';
+// Daily report: last short headline kept on this phone, and a 'stale' mark set by this phone's saves.
+export const REPORT_HEAD_KEY = 'bakery.report.last';
+export const REPORT_STALE_KEY = 'bakery.report.stale';
+
+export function markReportStale() {
+  try { localStorage.setItem(REPORT_STALE_KEY, '1'); } catch (e) {}
+}
 const pinWrongListeners = new Set();
 
 export function isValidPin(pin) {
@@ -117,6 +124,7 @@ function isNetworkError(err) {
 
 function handleWrongPin() {
   clearPin();
+  try { localStorage.removeItem(REPORT_HEAD_KEY); } catch (e) {}
   pinWrongListeners.forEach((fn) => {
     try { fn(); } catch (e) {}
   });
@@ -158,6 +166,8 @@ function takeResult(result) {
 export async function callApi(action, payload = {}, opts = {}) {
   const isWrite = !!opts.isWrite;
   const pin = getPin();
+  // Any save from this phone may change the report: the next report open asks for a fresh read.
+  if (isWrite) markReportStale();
   if (DATA_MODE === 'mock') {
     if (!mockModPromise) mockModPromise = import('./mock.js');
     const mock = await mockModPromise;

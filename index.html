@@ -42,11 +42,12 @@
     <p id="offline-banner" class="offline-banner" hidden>No internet — numbers can't load or save right now</p>
   </header>
 
-  <nav class="tabs" role="tablist" aria-label="Entry screens">
-    <button type="button" id="tab-wholesale" role="tab" aria-selected="true" aria-controls="panel-wholesale" data-tab="wholesale">Wholesale<br>Entry</button>
+  <nav class="tabs" role="tablist" aria-label="App screens">
+    <button type="button" id="tab-wholesale" role="tab" aria-selected="true" aria-controls="panel-wholesale" data-tab="wholesale">Wholesale</button>
     <button type="button" id="tab-expenses" role="tab" aria-selected="false" aria-controls="panel-expenses" data-tab="expenses" tabindex="-1">Expenses</button>
     <button type="button" id="tab-production" role="tab" aria-selected="false" aria-controls="panel-production" data-tab="production" tabindex="-1">Production</button>
-    <button type="button" id="tab-dispatch" role="tab" aria-selected="false" aria-controls="panel-dispatch" data-tab="dispatch" tabindex="-1">Dispatch<br>room</button>
+    <button type="button" id="tab-dispatch" role="tab" aria-selected="false" aria-controls="panel-dispatch" data-tab="dispatch" tabindex="-1">Dispatch</button>
+    <button type="button" id="tab-report" role="tab" aria-selected="false" aria-controls="panel-report" data-tab="report" tabindex="-1">Report</button>
   </nav>
 
   <main>
@@ -54,6 +55,7 @@
     <div id="panel-expenses" role="tabpanel" aria-labelledby="tab-expenses" hidden></div>
     <div id="panel-production" role="tabpanel" aria-labelledby="tab-production" hidden></div>
     <div id="panel-dispatch" role="tabpanel" aria-labelledby="tab-dispatch" hidden></div>
+    <div id="panel-report" role="tabpanel" aria-labelledby="tab-report" hidden></div>
   </main>
 
   <div id="who-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="who-modal-title" hidden>
