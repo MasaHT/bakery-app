@@ -3,14 +3,16 @@ import { malawiToday, dmy, addDays, dowOf, getPin, setPin, isValidPin, onWrongPi
 
 const WHO_STORAGE_KEY = 'bakery.who';
 const TAB_STORAGE_KEY = 'bakery.tab';
-const TAB_NAMES = ['wholesale', 'expenses', 'production', 'dispatch'];
+const TAB_NAMES = ['wholesale', 'expenses', 'production', 'dispatch', 'report'];
+// Report is never remembered as the start tab: launching on it would fire a slow report read.
+const NO_REMEMBER_TABS = ['report'];
 const loadedScreens = {};
 const whoListeners = new Set();
 
 function getSavedTab() {
   try {
     const t = localStorage.getItem(TAB_STORAGE_KEY);
-    if (TAB_NAMES.includes(t)) return t;
+    if (TAB_NAMES.includes(t) && !NO_REMEMBER_TABS.includes(t)) return t;
   } catch (e) {}
   return 'wholesale';
 }
@@ -311,7 +313,8 @@ async function openTab(name) {
     return;
   }
   activeTab = name;
-  try { localStorage.setItem(TAB_STORAGE_KEY, name); } catch (e) {}
+  // Opening Report sets the start tab back to Wholesale (Masa, 26 Nov).
+  try { localStorage.setItem(TAB_STORAGE_KEY, NO_REMEMBER_TABS.includes(name) ? 'wholesale' : name); } catch (e) {}
 
   TAB_NAMES.forEach((t) => {
     const selected = t === name;

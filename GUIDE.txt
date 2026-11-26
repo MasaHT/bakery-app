@@ -37,26 +37,46 @@ enter them again.
 At the top you will see "Entering as:" and your name.
 
 Pick a tab:
-- Wholesale Entry  (deliveries, stock left, cash, handovers)
+- Wholesale  (deliveries, stock left, cash, handovers)
 - Expenses
 - Production
-- Dispatch room
+- Dispatch  (dispatch room count)
+- Report  (the day's money: see below)
 
 Check the date at the top ("Date (Malawi)"). You can tap Today,
 Yesterday, or 2 days ago.
 
-On Wholesale Entry, also check the Shop name (Town, Home, Wakawaka,
+On Wholesale, also check the Shop name (Town, Home, Wakawaka,
 or St. John's). The app remembers the last shop used on that phone,
 so always look before you type.
 
 Type the numbers, then tap the dark button at the bottom:
-- "Save" on Wholesale Entry
+- "Save" on Wholesale
 - "Save all expenses" on Expenses
 - "Save production" on Production
-- "Save count" on Dispatch room
+- "Save count" on Dispatch
 
 If it worked, a green message appears, for example
 "Saved 25/11/2026 (Home)". The phone may also give a short buzz.
+
+3b. The Report tab
+-----------------
+Tap "Report" to see a day's money. It needs internet.
+- The big number is "Money made" (sales minus bakery expenses).
+- Under it: Sales, Expenses, Credit (what St John's owes), and
+  "Cash short" or "Family money" when there is any.
+- The shop list shows each shop's sales and cash. A red
+  "Check stock" means only Stock left was typed for that shop, so its
+  sales are not counted until the morning stock or deliveries are
+  typed.
+- "Needs attention" shows the 2 most important things to fix.
+- Tap "Show full details" to see everything (all shops, product
+  counts, production, dispatch room, expenses).
+- Tap "Refresh" to get the newest numbers. After you save something
+  on this phone, the report gets fresh numbers the next time you
+  open it.
+- With no internet, the phone shows the last report it saved, with
+  the time it was made ("as of 14:05").
 
 4. Switching names on a shared phone
 ------------------------------------
